@@ -1,0 +1,73 @@
+
+---
+title: "Analysis of LeBron Dataset"
+author: "Luis Guilherme Apelfeld"
+date: "05/28/2024"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The LeBron dataset from FiveThirtyEight includes statistics for LeBron James, collected from his basketball games. It measures different performance metrics, like game scores and player stats. The data is saved in a CSV file.
+
+```{r}
+library(readr)
+
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/lebron/lebron.csv"
+lebron_data <- read_csv(url)
+```
+
+
+```{r}
+library(dplyr)
+
+cleaned_lebron_data <- lebron_data %>%
+  rename(GameID = game_id, Points = pts, Assists = ast) %>%
+  filter(!is.na(GameID))
+
+head(cleaned_lebron_data)
+```
+
+This dataframe has `r nrow(cleaned_lebron_data)` rows and `r ncol(cleaned_lebron_data)` columns. The names of the columns and a brief description of each are in the table below:
+
+```{r}
+library(knitr)
+
+columns_summary <- data.frame(
+  Columns = colnames(cleaned_lebron_data),
+  Description = c(
+    "Game ID",
+    "Date of the game",
+    "Opponent team",
+    "Game result",
+    "Points scored by LeBron",
+    "Assists made by LeBron",
+    "Rebounds by LeBron",
+    "Other columns..."
+  )
+)
+
+kable(columns_summary, caption = "Description of Columns in LeBron Dataset")
+```
+
+
+```{r}
+summary_data <- cleaned_lebron_data %>%
+  select(GameID, Points, Assists)
+
+summary_stats <- summary_data %>%
+  summarize(
+    MinPoints = min(Points, na.rm = TRUE),
+    MaxPoints = max(Points, na.rm = TRUE),
+    MeanPoints = mean(Points, na.rm = TRUE),
+    MissingPoints = sum(is.na(Points)),
+    MinAssists = min(Assists, na.rm = TRUE),
+    MaxAssists = max(Assists, na.rm = TRUE),
+    MeanAssists = mean(Assists, na.rm = TRUE),
+    MissingAssists = sum(is.na(Assists))
+  )
+
+summary_stats
+```

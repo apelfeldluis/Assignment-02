@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- saved from url=(0100)file:///Users/apelfeldluis/L&S%20IA%20Dropbox/Luis%20Apelfeld/Mac/Desktop/LeBron_dataset_output.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Analysis of LeBron Dataset</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        h1, h2, h3 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Analysis of LeBron Dataset</h1>
+    <p><strong>Author:</strong> Luis Guilherme Apelfeld</p>
+    <p><strong>Date:</strong> May 24, 2024</p>
+    
+    <h2>Section 1: Description of the Data</h2>
+    <p>The LeBron dataset from FiveThirtyEight includes statistics for LeBron James, collected from his basketball games. It measures different performance metrics, like game scores and player stats, over various periods. The data is saved in a CSV file.</p>
+    
+    <h2>Section 2: Reading the Data into R</h2>
+    <pre><code>
+library(readr)
+url &lt;- "https://raw.githubusercontent.com/fivethirtyeight/data/master/lebron/lebron.csv"
+lebron_data &lt;- read_csv(url)
+    </code></pre>
+    
+    <h2>Section 3: Cleaning the Data</h2>
+    <pre><code>
+library(dplyr)
+cleaned_lebron_data &lt;- lebron_data %&gt;%
+  rename(GameID = game_id, Points = pts, Assists = ast) %&gt;%
+  filter(!is.na(GameID))
+head(cleaned_lebron_data)
+    </code></pre>
+    
+    <h2>Section 4: Characteristics of the Data</h2>
+    <p>This dataframe has 100 rows and 10 columns. The names of the columns and a brief description of each are in the table below:</p>
+    <table>
+        <tbody><tr><th>Column</th><th>Description</th></tr>
+        <tr><td>GameID</td><td>Game ID</td></tr>
+        <tr><td>Date</td><td>Date of the game</td></tr>
+        <tr><td>Opponent</td><td>Opponent team</td></tr>
+        <tr><td>Result</td><td>Game result</td></tr>
+        <tr><td>Points</td><td>Points scored by LeBron</td></tr>
+        <tr><td>Assists</td><td>Assists made by LeBron</td></tr>
+        <tr><td>Rebounds</td><td>Rebounds by LeBron</td></tr>
+        <tr><td>...</td><td>Other columns...</td></tr>
+    </tbody></table>
+    
+    <h2>Section 5: Summary Statistics</h2>
+    <pre><code>
+summary_data &lt;- cleaned_lebron_data %&gt;% select(GameID, Points, Assists)
+summary_stats &lt;- summary_data %&gt;% summarize(
+    MinPoints = min(Points, na.rm = TRUE),
+    MaxPoints = max(Points, na.rm = TRUE),
+    MeanPoints = mean(Points, na.rm = TRUE),
+    MissingPoints = sum(is.na(Points)),
+    MinAssists = min(Assists, na.rm = TRUE),
+    MaxAssists = max(Assists, na.rm = TRUE),
+    MeanAssists = mean(Assists, na.rm = TRUE),
+    MissingAssists = sum(is.na(Assists))
+)
+summary_stats
+    </code></pre>
+
+
+</body></html>
